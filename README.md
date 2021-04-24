@@ -65,6 +65,8 @@ V1 has some issues. My roadmap is as follows
 
 -Recode pixget to be more efficent and use less pixel checks
 
+-Add 1080p and 720p support because currnetly it only works on 360p streams.
+
 -add more todo.py options, to remove all sources and reduce disk usage.
 
 -Add item detection 
