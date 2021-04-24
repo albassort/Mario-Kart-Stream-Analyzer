@@ -1,4 +1,4 @@
-from pixget import pix,  # type: ignore
+from pixget import pix  # type: ignore
 import cv2
 import os
 import sys
