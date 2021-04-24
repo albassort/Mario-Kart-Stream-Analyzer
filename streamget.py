@@ -15,13 +15,16 @@ cc = 0
 vc = 0
 cccc = 0 
 v = sys.argv[1]
-v2 = f'{sys.argv[2]}'
+v2 = sys.argv[2]
+v3 = sys.argv[3]
 #does link checking and pratitions it
 cn = v2.partition('.tv/')[2]
-if cn == '':
+if not cn:
     print("EROR INVALID TWITCH LINK")
+    print(cn)
     quit()
 cn = cn.partition('/')[0]
+print(cn)
 s = 0
 while True:
     #this is stupid and im too afraid to touch it
@@ -43,8 +46,6 @@ while True:
                 s += 1
                 print('ci')
                 continue
-            #As stated above, this counts the frames, and when c > x
-            #it sets z = 0 and recaptures the video, reducing the delay
             if state == -1:
                 if cc < 220:
                     cc += 1
@@ -52,7 +53,7 @@ while True:
                     continue
                 else:
                     cv2.imwrite('temp/temp.jpg', frame)
-                    os.system('jp2a --colors --fill temp.jpg')
+                  #  os.system('jp2a --colors --fill temp/temp.jpg')
                     state = 2
                     c = 0
                     ct = 3000
@@ -64,10 +65,11 @@ while True:
                 print(f'    {ccc}', end = '\r')
                 state = 2
                 try:            
-                    os.makedirs('temp')
+                    os.makedirs('temp/')
                 except FileExistsError:
-                    continue
-                cv2.imwrite(f'temp/temp{ccc}.jpg', frame)
+                    pass
+                if cc <= 100:
+                    cv2.imwrite(f'temp/temp{ccc}.jpg', frame)
                 if ccc > 900:
                     state = 1
                     ccc = 0
