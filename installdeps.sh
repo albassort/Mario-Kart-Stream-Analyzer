@@ -1,1 +1,1 @@
-pip install stringcolor opencv-python pillow tesseract
+pip install stringcolor opencv-python pillow tesseract streamlink
