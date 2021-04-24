@@ -1,5 +1,7 @@
 # Mario-Kart-Stream-Analyzer
-# By Caroline M, Albassort.
+*By Caroline M, Ialbassort*
+*Contact at retkid#9135 on discord*
+*Listen to my music at abnormalaudio.com*
 A program that watches twitch, records each Mario Kart 8 game given, and generates a graph of data over time.
 # Dependencies:
 `pip install stringcolor opencv-python pillow tesseract streamlink` or `./installdeps.sh`
