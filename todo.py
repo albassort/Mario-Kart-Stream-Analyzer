@@ -10,7 +10,7 @@ from PIL import Image
 import shutil
 import subprocess
 from asciidetection import gen, asciimain  # type: ignore
-def penis(todo):
+def penme(todo):
     print('testt')
     cc = []
     v1 = len(os.listdir(todo))-2
@@ -101,7 +101,7 @@ for xz in range(0, count):
         z = len(os.listdir(f'{channel}/out'))
         exdir = f'{channel}/out/{z}'
         print('test pp')
-        penis(todo)
+        penme(todo)
         subprocess.Popen(
             ['convert', f'{todo}/temp/temp50.jpg', '-crop 640x360+210+315', '-crop', '-200-20', '-type Grayscale', '-sharpen 0x12', f'{exdir}/boop.jpg'])
 
