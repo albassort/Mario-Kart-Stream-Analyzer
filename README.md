@@ -31,8 +31,35 @@ at 'end check' the folder is appended to todo.txt for later 'compilation'.
 
 # todo.py
 
-`./todo.py` ((takes no args))
+`python todo.py` ((takes no args))
 todo.py manages compilation of the raw frames, first into cropped greyscale images,
 and then into binary black and white images. This happens at /processed/${digit}.
-It also extracts data from the original folder and moves it over into the new final generated folder at ./channel/out/
+It also extracts data from the original folder and moves it over into the new final generated folder at ./channel/out/digit
+
+./channel/out/digit/html is where the final archive of the data is compiled to. The processed/0 and channel/date and can be deleted if you don't want any backups encase something goes wrong...
+
+# stats.py
+`python stats.py`
+
+Used to explore your achives and doesn't need much explaining
+
+# ID.py
+`python id.py -regen or no arg.`
+
+Generates a list of consistent elements of all images in id/ranknumbers. compiled to id/ranknumbershtml
+
+to learn more, read id/README.md and the comments in id.py
+
+# Roadmap 
+V1 has some issues. My roadmap is as follows
+
+-Add GUI (programmed in Nim)
+
+-Recode pixget to be more efficent and use less pixel checks
+
+-add more todo.py options, to remove all sources and reduce disk usage.
+
+-Add item detection 
+
+-Add the ability to scrape twitch bets ((BETA FEATURE, PLEASE CONTACT ME IF YOU ARE A PARTNER AND WANT TO HEL DEVEOPLENT!!!!!!!!!!!!!!!!!!!!!!!!!!!))
 
