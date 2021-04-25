@@ -10,11 +10,13 @@ from PIL import Image
 import shutil
 import subprocess
 from asciidetection import gen, asciimain  # type: ignore
+
+
 def penme(todo):
     print('testt')
     cc = []
     v1 = len(os.listdir(todo))-3
-    v1 = (int(v1/4), int(v1)%4)
+    v1 = (int(v1/4), int(v1) % 4)
     #counts the amount of files in todo and creates 1/4 slices for
     state = []
     print(v)
@@ -24,9 +26,6 @@ def penme(todo):
         for x in range(0, int(v)):
             #reads ID from all of processed/
             match = read(0, f'processed/{x}/id.txt')
-            if match == "File or line doesn't exist":
-            #if an error occurs, we delete it
-                shutil.rmtree(f'processed/{x}')
             if match == todo:
                 state.append(1)
                 globals()['v'] = x
@@ -36,7 +35,7 @@ def penme(todo):
         print(state)
         print(x)
     else:
-        state.append(0) 
+        state.append(0)
     if state[-1] == 0:
         #ugly ugly subprocess code
         print(state[-1])
@@ -47,25 +46,16 @@ def penme(todo):
             write("0", 3, 'cache.txt')
         #does some basic math to allocate the 4 subprocess range
         #to perfectly split up 'todo ls \ wc -l'
-        subprocess.Popen(['bash', 'ascii.sh', 'convert',  str(1), str(v1[0]), todo, str(v), str(1)])
-        subprocess.Popen(['bash', 'ascii.sh', 'convert',  str(v1[0]), str(v1[0]*2), todo, str(v), str(2)])
-        subprocess.Popen(['bash', 'ascii.sh', 'convert',  str(v1[0]*2), str(v1[0]*3), todo, str(v), str(3)])
-        subprocess.Popen(['bash', 'ascii.sh', 'convert',  str(v1[0]*3), str((v1[0]*4)+v1[1]), todo, str(v), str(4)])
+        p = subprocess.Popen(['bash', 'ascii.sh', 'convert',
+                          str(1), str(v1[0]), todo, str(v), str(1)])
+        p1 = subprocess.Popen(['bash', 'ascii.sh', 'convert',  str(
+            v1[0]), str(v1[0]*2), todo, str(v), str(2)])
+        p2 = subprocess.Popen(['bash', 'ascii.sh', 'convert',  str(
+            v1[0]*2), str(v1[0]*3), todo, str(v), str(3)])
+        p3 = subprocess.Popen(['bash', 'ascii.sh', 'convert',  str(
+            v1[0]*3), str((v1[0]*4)+v1[1]), todo, str(v), str(4)])
         x = len(cc)
-        time.sleep(1)
-        #the weird check for completion of subprocess.
-        #reads cache.txt and awaits for the day that the subprocces's are finished.
-        while len(cc) != 4:
-            for x in range(0, 4):
-                time.sleep(1)
-                #stop the read from breaking my disk's iowait lol.
-                temp = read(x, 'cache.txt')
-                if len(cc) >= 4:
-                    break
-                if temp != "1":
-                    continue
-                else:
-                    cc.append(1)
+        p1.wait(); p2.wait(); p3.wait(); p.wait()
         #Converts images to binary black and white images
         for x in range(1, (v1[0]*3+sum(v1))):
             print(x)
@@ -73,11 +63,12 @@ def penme(todo):
                 print('error')
                 continue
             img = cv2.imread(f'processed/{v}/rank/rank{x}.jpg', 2)
-                #magic numbers. First ones i tried, that just kinda work
+            #magic numbers. First ones i tried, that just kinda work
             ret, bw_img = cv2.threshold(img, 140, 255, cv2.THRESH_BINARY)
             im = Image.fromarray(bw_img)
             #saves the image
             im.save(f'processed/{v}/binrank{x}.jpg')
+        time.sleep(1)
         shutil.rmtree(f'processed/{v}/rank/')
         #writes todo, to id, to complete the loop :)
         write(todo, 0, f'processed/{v}/id.txt')
@@ -89,9 +80,10 @@ def penme(todo):
     gen('gen', exdir, f'processed/{v}')
     asciimain(exdir)
 
+
 count = linecount('todo.txt')
 for xz in range(0, count):
-    todo = read(xz, 'todo.txt')[:-1]
+    todo = read(xz, 'todo.txt')
     if os.path.exists("processed/") == False:
         os.mkdir('processed/')
     v = len(os.listdir('processed/'))
@@ -101,18 +93,25 @@ for xz in range(0, count):
         continue
     elif todo == 'quit':
         quit()
+    elif os.path.exists(todo) == False:
+        write(f'done, {todo}//path doesn"t exist', xz, 'todo.txt')
+        continue
     else:
         s = stopwatch()
-        if os.path.exists(f'{todo}/temp/temp50.jpg') == False:
-            write(f'done, {todo}//ERROR MISSING temp50.jpg', xz, 'todo.txt')
-            print('ERROR MISSING TEMP50')
-            continue
+      #  if os.path.exists(f'{todo}/temp/temp50.jpg') == False:
+        #write(f'done, {todo}//ERROR MISSING temp50.jpg', xz, 'todo.txt')
+        #print('ERROR MISSING TEMP50')
+        #f continue
         #this is pretty self explanitory
         #this just takes stuff from around the files and gleans all the data it can from it
         channel = todo.partition('/')[0]
+        if not channel:
+            continue
         if os.path.exists(f'{channel}/out/') == False:
             os.makedirs(f'{channel}/out/')
         z = len(os.listdir(f'{channel}/out'))
+        if not z:
+            z = 0
         exdir = f'{channel}/out/{z}'
         print('test pp')
         penme(todo)
@@ -126,12 +125,13 @@ for xz in range(0, count):
         avg = []
         timze = read(3, f'{todo}/meta.txt')[:-1]
         write(f'{timze}s', 6, f'{exdir}/meta.txt')
-        try: 
+        try:
             write(f'{float(timze)/3}s', 7, f'{exdir}/meta.txt')
         except:
-            write('some really stupid shit bug happened', 7, f'{exdir}/meta.txt')
-        bet1=read(0, f'{todo}/meta.txt')
-        bet2=read(1, f'{todo}/meta.txt')
+            write('some really stupid shit bug happened',
+                  7, f'{exdir}/meta.txt')
+        bet1 = read(0, f'{todo}/meta.txt')
+        bet2 = read(1, f'{todo}/meta.txt')
         write(bet1, 8, f'{exdir}/meta.txt')
         write(bet2, 9, f'{exdir}/meta.txt')
         write(todo, 10, f'{exdir}/meta.txt')
@@ -145,7 +145,7 @@ for xz in range(0, count):
 #line 1 = Stage
 # 2 = players
 # 3 = final rank entry
-#4 = averege rank   
+#4 = averege rank
 #5 = lowest place
 #6 = highest place
 #7 = total time
