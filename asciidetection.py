@@ -27,13 +27,8 @@ def gen(arg1, arg2, arg3):
     elif arg1 == 'gen':
         write(0, 0, 'cache.txt')
         done = 0
-        subprocess.Popen(['bash', 'ascii.sh', arg2, arg3])
-        while done == 0:
-            if read(0, 'cache.txt') == '1':
-                done = 1
-            else:
-                time.sleep(1)
-                continue
+        p = subprocess.Popen(['bash', 'ascii.sh', arg2, arg3])
+        p.wait()
     htmlindex = os.listdir(f'{arg2}/html')
     htmlindex.sort(key=lambda x: int(x.partition('.')[0].partition('k')[2]))
     for x in range(0, len(htmlindex)):
