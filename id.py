@@ -13,8 +13,8 @@ import time
 #this script will regen the ascii on run with -regen:
 
 #Advice:
-#Include an all-black and all-white image, and the output will be nearly perfect.
-#however, the images the less likely asciidetection is to freakout.
+#Include an all-black and all-white backround image, and the output will be nearly perfect.
+#however, the more images the less likely asciidetection is to freakout.
 done = 0
 try:
     arg1 = sys.argv[1]
@@ -79,6 +79,8 @@ for num in range(1, 13):
             buildh.append(build[x])
         print(''.join(buildh))
         buildh = []
+        write(uni, (num-1), 'id/uni.txt')
+
 #note: add write to id/uni.txt to save output.
 #This is a rewrite of a script that was accidentally delete
 #I know it works the exact same and the output is identical, but to be safe
