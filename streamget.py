@@ -38,12 +38,12 @@ if v4 != None:
     monthconv = {'01': "Jan", '02': 'Feb', '03': 'Mar', '04': 'Apr', 
     '05': 'Jun', '06': 'Jun', '07': 'Jul', '08': 'Aug', '09': 'Sep',
     '10': 'Oct', '11': 'Nov', '12': 'Dec'}
-  #  import subprocess
-  #  shutil.rmtree('temp')
- #   os.mkdir('temp')
- #   p = subprocess.Popen(['youtube-dl', '-f', '243', v4,
-   #                   '-o', 'temp/%(upload_date)s.%(ext)s'])
- #   p.wait()
+    import subprocess
+    shutil.rmtree('temp')
+    os.mkdir('temp')
+    p = subprocess.Popen(['youtube-dl', '-f', '243', v4,
+                      '-o', 'temp/%(upload_date)s.%(ext)s'])
+    p.wait()
     v = f'temp/{os.listdir("temp")[0]}'  
     temp = v.partition('.')[0].partition('/')[2]
     print(temp)
