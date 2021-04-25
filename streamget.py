@@ -8,15 +8,17 @@ import time
 import shutil
 from stopwatch import Stopwatch
 today = date.today(); d = today.strftime("%b-%d-%Y")
-#too many counters wtf was i doing.
 z = 0
-ccc = 0
-cc = 0  
-vc = 0
-cccc = 0 
+load = 0
+count = 0
+succcount = 0
+state = 1
 v = sys.argv[1]
 v2 = sys.argv[2]
-v3 = sys.argv[3]
+try:
+    v3 = sys.argv[3]
+except:
+    pass
 #does link checking and pratitions it
 cn = v2.partition('.tv/')[2]
 if not cn:
@@ -30,56 +32,52 @@ while True:
     #this is stupid and im too afraid to touch it
     while True:
         #Allows for the recapture of video to reduce delay.
-        #Happens at the frame interval dictated by c >, ~line 57~z
         if z != 1:
             cap = cv2.VideoCapture(v)
-            print("test")
             z = 1
-            c = 0
-        try:
-            succ, frame = cap.read()
-        except:
-            continue
+        succ, frame = cap.read()
+        if not succ:
+            load = 0
+            succcount += 1
+        if succcount >= 10:
+            exit('File is probably over')
         if succ:
-            if s == 0:
-                state = pix(frame, 1)
-                s += 1
-                print('ci')
-                continue
+            if load == 0:
+                succcount = 0
+                load = 1
             if state == -1:
-                if cc < 220:
-                    cc += 1
-                    print(cc)
+                if count < 220:
+                    count += 1
+                    print(count)
                     continue
                 else:
                     cv2.imwrite('temp/temp.jpg', frame)
                   #  os.system('jp2a --colors --fill temp/temp.jpg')
                     state = 2
-                    c = 0
-                    ct = 3000
+                    count = 0
     #     #Writes temp.jpg, which will be used to generate meta data
-            #resets to 1 if -2 is returned ccc > x times.
+            #resets to 1 if -2 is returned count > x times.
             #used to parse false positives
             if state == -2:
-                ccc+=1
-                print(f'    {ccc}', end = '\r')
+                count+=1
+                print(f'    {count}', end='\r')
                 state = 2
                 try:            
                     os.makedirs('temp/')
                 except FileExistsError:
                     pass
-                if cc <= 100:
-                    cv2.imwrite(f'temp/temp{ccc}.jpg', frame)
-                if ccc > 900:
+                if count < 100:
+                    cv2.imwrite(f'temp/temp{count}.jpg', frame)
+                if count > 900:
                     state = 1
-                    ccc = 0
+                    count = 0
                     shutil.rmtree('temp')
                     print('GO TIMEOUT, RETURN TO MONKE')
             #creates a file structure for data if the race start is detected
             # channelname/date/number of files in dir           
             if state == -3:
-                if cccc <= 110:
-                    cccc += 1
+                if count <= 110:
+                    count += 1
                     continue
                 print('go detected, doin stuff')
                 if os.path.exists(f'{cn}/{d}/') == False:
@@ -90,32 +88,39 @@ while True:
                 shutil.move('temp', dir)
                 os.makedirs('temp')
                 print("g")
-                ct = 1000
-                cc = 0
-                ccc = 0
+                count = 0
                 stopwatchx = Stopwatch()
                 state = 3
             if state == 4:
                 state = 1
-                cc = 0
+                count = 0
                 todo = linecount('todo.txt')
-                write(f'{cn}/{d}/{number}/', int(todo+1), 'todo.txt')
+                write(f'{cn}/{d}/{number}/', todo, 'todo.txt')
                 write(str(stopwatchx.stop()), 3, f'{dir}meta.txt')
-                time.sleep(15)
+                if not v3:
+                    time.sleep(10)
+                    z =0 
+                break
             if state == 3:
-                cv2.imwrite(f'{dir}noprocess{cc}.jpg', frame)
-                print(f'   noprocess{cc}', end = '\r')
-                cc += 1
+                cv2.imwrite(f'{dir}noprocess{count}.jpg', frame)
+                print(f'   noprocess{count}', end='\r')
+                count += 1
+                if count >= 5000:
+                    shutil.rmtree(dir)
+                    state = 1
+                    count = 0
+            #check if 
+            #attempts to gate out false positives with -5
+            #it will wait 5 frames, and if it is still reading loading, it will actually  register loading load
             if state == -5:
-                if vc < 5:
-                    vc+=1
+                if count < 5:
+                    count += 1
                     continue
-                if vc > 5:
+                if count > 5:
                     state = pix(frame, int(-5))
-                    vc = 0
+                    count = 0
             state = pix(frame, int(state))
             print(state, end = '\r')
         else:
             break
     
-    # quit()
