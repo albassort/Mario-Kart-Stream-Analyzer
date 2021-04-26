@@ -1,5 +1,5 @@
 import os
-from init import read, write, linecount, readall  # type: ignore
+from init import read, write, linecount, readall, writelist  # type: ignore
 import time
 import sys 
 import subprocess
@@ -11,7 +11,6 @@ def asciiread(input):
         find.append(z[x])
     find = ''.join(find)
     return find
-
 #sets up ARGS,so they aren't manditory when executing.
 skim = []
 acceptedterms = ['gen', 'exists']
@@ -25,8 +24,6 @@ def gen(arg1, arg2, arg3):
         if os.path.exists(f'{arg2}/html') == False:
             return exit(cs(f'-EXISTS USED AND {arg2}/html DOES NOT EXIST', 'F93148'))
     elif arg1 == 'gen':
-        write(0, 0, 'cache.txt')
-        done = 0
         p = subprocess.Popen(['bash', 'ascii.sh', arg2, arg3])
         p.wait()
     htmlindex = os.listdir(f'{arg2}/html')
@@ -103,6 +100,7 @@ def asciimain(arg2):
     error = 0
     state = 1
     lastgood = 0
+    print(tot)
     #here is the filtering list, rebuilding from tots literal start.
     for x in range(0, len(tot)):
         #factors for the skip
@@ -118,7 +116,7 @@ def asciimain(arg2):
                         state = 2
                         continue
                     if state == 2:
-                        #at start, tot2 doesn't get appeneded upntuil
+                        #at start, tot2 doesn't get appeneded until
                         #the next likely number is less than 34.
                         #this is to prevent 1s at the start of score rec
                         if tot[x][1] < 34:
@@ -140,8 +138,7 @@ def asciimain(arg2):
         except Exception:
             break
     print(tot2)    
-    for x in range(0, len(tot2)):
-        write(tot2[x], x, f"{arg2}/rank.txt")
+    writelist(tot2, f"{arg2}/rank.txt")
     write(tot2[-1], 2, f"{arg2}/meta.txt")
     f = float(sum(tot2)/len(tot2))
     write(f, 3, f"{arg2}/meta.txt")
