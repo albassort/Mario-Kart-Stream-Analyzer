@@ -1,1 +1,1 @@
-pip install stringcolor opencv-python pillow tesseract streamlink stopwatch
+pip install stringcolor opencv-python pillow tesseract streamlink stopwatch youtube_dl
