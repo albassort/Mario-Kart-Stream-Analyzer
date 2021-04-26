@@ -75,7 +75,10 @@ def copypasta(str1, str2, y):
             underscore()
             for x in printavglist(y):
                 print(x)
-            print('? to bring up previous dialog')
+            input()
+        else:
+            return
+      #  if t != 'a':
 state = 1
 redo = 0
 death = True
@@ -223,19 +226,26 @@ x to back to channel select''')
                 elif sf.isdigit() == False:
                     print('please enter digit')
                 elif int(sf) > 6 or int(sf) < 1:
-                    print('please enter a digit less than between 1 and 5.')       
+                    print('please enter a digit less than between 1 and 5.')   
+                    load = 0    
                 elif sf == "1":
                     copypasta('highest rank', 'lowest rank', 1)
+                    load = 0
                 elif sf == "2":
                     copypasta('highest rank avg rank', 'lowest rank', 2)
+                    load = 0
                 elif sf == "3":
                     copypasta('most players', 'least players', 0)
+                    load = 0
                 elif sf == "4":
                     copypasta('highest low', 'lowest low', 3)
+                    load = 0
                 elif sf == "5":
                     copypasta('highest high', 'highest low', 4)
+                    load = 0
                 elif sf == "6":
                     copypasta('most players', 'least players', 5)
+                    load = 0
         elif sf.isdigit() == False:
             print('please enter a digit')
         elif int(sf) > len(dictcourselist):
