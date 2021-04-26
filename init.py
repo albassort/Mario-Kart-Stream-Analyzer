@@ -3,7 +3,7 @@ import pytesseract
 import os
 from os import path
 #i have no clue how this works.
-def write(x, y, path):
+def writemakepath(path):
     if os.path.exists(path) == False:
         makepath = path.rpartition("/")
         #replace vulnerable os.system()...
@@ -14,9 +14,12 @@ def write(x, y, path):
         else:
             #if not, it will make the folder.
             if os.path.exists(makepath[0]) == False:
-                os.makedirs(makepath[0])  
+                os.makedirs(makepath[0])
             with open(f'{makepath[0]}/{makepath[2]}', 'w') as temp:
                 temp.close
+
+def write(x, y, path):
+    writemakepath(path)
     with open(path) as f:
         linex = f.readlines()
         linxc = len(linex)
@@ -33,6 +36,14 @@ def write(x, y, path):
         lines[y] = x+'\n'
     with open(path, 'w') as f2:
         f2.writelines(lines)
+
+
+def writelist(listx, file):
+    writemakepath(file)
+    with open(file, 'a') as f:
+        for xy in listx:
+            f.writelines(str(xy)+"\n")
+        f.close
 
 def read(line, file):
     #...reads file
@@ -67,12 +78,3 @@ def ocr_core(f):
     text = text.lstrip(' ')
     #filters noise
     return text
-def writelist(listx, y, file):
-    #counter is ugly but, i guess i decided to do this?!?
-    if type(listx) != list:
-        print('WRITELIST ERROR')
-        return "ERROR! YOU DIDN'T GIVE A LIST"
-    for yx in range(0, len(listx)):
-        y = y+yx
-        write(listx[yx], y, file) 
-        print(yx)
