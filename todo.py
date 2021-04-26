@@ -1,4 +1,4 @@
-from init import read, write, linecount, ocr_core, writelist  # type: ignore
+from init import read, write, linecount, ocr_core # type: ignore
 import os
 import sys
 import time
@@ -40,10 +40,6 @@ def penme(todo):
         #ugly ugly subprocess code
         print(state[-1])
         os.makedirs(f'processed/{v}/rank')
-        if os.path.exists('cache.txt') == False:
-            with open('cache.txt', 'w') as temp:
-                temp.close
-            write("0", 3, 'cache.txt')
         #does some basic math to allocate the 4 subprocess range
         #to perfectly split up 'todo ls \ wc -l'
         p = subprocess.Popen(['bash', 'ascii.sh', 'convert',
