@@ -1,4 +1,5 @@
 from PIL import Image
+import time
 def sebn(itul, out):
     num = len(itul)
     #previously hacky newb globals stuff
@@ -13,14 +14,15 @@ def pix(frame, inx):
     #these if statements only trigger if a state is given
     #this saves a lot of time
     if int(inx) == 1 or int(inx) == -5:
-        btwtul = [img.getpixel((250, 40)), img.getpixel((321, 115)), img.getpixel((420, 330))]
-        outlist = []
-        sebn(btwtul, outlist)
-        ib1 = 620 <= outlist[0] <= 770
-        ib2 = 0 <= outlist[1] <= 55
-        ib3 = 0 <= outlist[2] <= 570
-        ibl1 = (ib1, ib2, ib3)
-    #ib1-6 are composite rgb values because innacuracy is unlikely
+        #ordered BGR
+        btwtul = [img.getpixel((310, 32)), img.getpixel((321, 293   )), img.getpixel((420, 330))]
+        z = []
+        ib1 = 680 <= sum(btwtul[0]) <= 770
+        ib2 = 0 <= sum(btwtul[1]) <= 55
+        ib3 = 140 <= btwtul[2][0] <= 230
+        ib4 = 140 <= btwtul[2][1] <= 230
+        ib5 = 140 <= btwtul[2][2] <= 230
+        ibl1 = (ib1, ib2, ib3, ib4, ib5)    #ib1-6 are composite rgb values because innacuracy is unlikely
     #ib7-13 are the 6 RGB values for ending to create a very specific very false positive proof check
     if int(inx) == 2:
         #Go, only triggers while waiting for race start
@@ -28,26 +30,33 @@ def pix(frame, inx):
         #If they all correct, the logic below will switch the program state
         gox1 = img.getpixel((260,150)); gox2 = img.getpixel((330,145)); gox3 = img.getpixel((380,145))
         (b0, g0, r0) = gox1; (b1, g1, r1) = gox2; (b2, g2, r2) = gox3
+        go1 = 200 <= r0 <= 255
+        go2 = 200 <= r1 <= 255
+        go3 = 200 <= r2 <= 255
         
-        go1 = 200 <= r0 <= 255; go2 = 200 <= r1 <= 255; go3 = 200 <= r2 <= 255
+        go4 = 180 <= g0 <= 225 
+        go5 = 180 <= g1 <= 225 
+        go6 = 180 <= g2 <= 225
         
-        go4 = 180 <= g0 <= 225; go5 = 180 <= g1 <= 225; go6 = 180 <= g2 <= 225
-        
-        go7 = 0 <= b0 <= 70 ; go8 = 0 <= b1 <= 70; go9 = 0 <= b2 <= 70
-       
+        go7 = 0 <= b0 <= 70 
+        go8 = 0 <= b1 <= 70 
+        go9 = 0 <= b2 <= 70
         goftul = [go1, go2, go3, go4, go5, go6, go7, go8, go9]
     if int(inx) == 3:
         #End Checuk, only triggers while race in progress
         c7 = img.getpixel((354,133)); c8 = img.getpixel((420,156)); c9 = img.getpixel((220,152))
-      
-        (b6, g6, r6) = c7; (b7, g7, r7) = c8; (b8, g8, r8) = c9
-       
-        ib7 = 200 <= r6 <= 255; ib8 = 200 <= r7 <= 255; ib9 = 200 <= r8 <= 255
-      
-        ib10 = 205 <= g6 <= 255; ib11 = 205 <= g7 <= 255; ib12 = 205 <= g8 <= 255
-     
-        ib13 = 10 <= b6 <= 70 or 180 <= b6 <= 255 ; ib14 = 10 <= b7 <= 70; ib15 = 10 <= b8 <= 70
-      
+        (b6, g6, r6) = c7; 
+        (b7, g7, r7) = c8; 
+        (b8, g8, r8) = c9
+        ib7 = 200 <= r6 <= 255
+        ib8 = 200 <= r7 <= 255
+        ib9 = 200 <= r8 <= 255
+        ib10 = 205 <= g6 <= 255
+        ib11 = 205 <= g7 <= 255
+        ib12 = 205 <= g8 <= 255
+        ib13 = 10 <= b6 <= 70 or 180 <= b6 <= 255 
+        ib14 = 10 <= b7 <= 70 
+        ib15 = 10 <= b8 <= 70
         ibl3 = (ib7, ib8, ib9, ib10, ib11, ib12, ib13, ib14, ib15)
     #startup state, looks for loading
     #returns are used to communicate with upper script
@@ -56,10 +65,12 @@ def pix(frame, inx):
     if int(inx) == 1:
            # print(ibl1)
         if all(ibl1) == True:
+            print(btwtul)
             return int(-5)
         else:
             return int(1)
-    #something to do with something in the uppp sript?
+    #attempts to gate out false positives with -5
+    #it will wait 5 frames, and if it is still reading loading, it will actually  register loading load
     if int(inx) == -5:
         if all(ibl1) == True:
             return int(-1)
