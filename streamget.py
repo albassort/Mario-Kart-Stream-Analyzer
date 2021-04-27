@@ -101,7 +101,7 @@ while True:
                 continue
             else:
                 cv2.imwrite('temp/temp.jpg', frame)
-                os.system('jp2a --colors --fill temp/temp.jpg')
+                #os.system('jp2a --colors --fill temp/temp.jpg')
                 state = 2
                 count = 0
 #     #Writes temp.jpg, which will be used to generate meta data
