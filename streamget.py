@@ -7,6 +7,7 @@ from datetime import date
 import time
 import shutil
 from stopwatch import Stopwatch
+from stringcolor import cs
 today = date.today()
 d = today.strftime("%b-%d-%Y")
 z = 0
@@ -15,24 +16,24 @@ count = 0
 succcount = 0
 v = sys.argv[1]
 v2 = sys.argv[2]
+cn = v2.partition('.tv/')[2]
+if not cn:
+        print("EROR INVALID TWITCH LINK")
+        print(cs('WARNING: ARG2 will now be interpreted as out folder name.', '#F93148'))
+        cn = v2
+else:        
+    cn = cn.partition('/')[0]
+
 try:
     v3 = sys.argv[3]
 except:
     v3 = True
-try: 
-    v4 = sys.argv[4]
-except:
-    v4 = None
+
+v4 = None
 state = 1
 frames = 0
 framez =[]
 #does link checking and pratitions it
-cn = v2.partition('.tv/')[2]
-if not cn:
-    print("EROR INVALID TWITCH LINK")
-  #  print(cn)
-    quit()
-cn = cn.partition('/')[0]
 #print(cn)
 def convertdate(v):   
     monthconv = {'01': "Jan", '02': 'Feb', '03': 'Mar', '04': 'Apr', 
@@ -45,25 +46,27 @@ def convertdate(v):
     d = (f'{month}-{day}-{year}') 
     return d
 
-if v4 != None:
+if v3 != None:
     import subprocess
     if os.path.exists('vodtemp') == False:
         os.mkdir('vodtemp')
 #    else:
    #     shutil.rmtree('vodtemp')
    #     os.mkdir('vodtemp')
-    p = subprocess.Popen(['youtube-dl', '-f', '243', v4,
+    p = subprocess.Popen(['youtube-dl', '-f', '243', v3,
                       '-o', 'vodtemp/%(upload_date)s.%(ext)s'])
     p.wait()
-    if v4.partition('list')[1]:
+    if v3.partition('list')[1]:
         incr = 0
         youlist = os.listdir("vodtemp")
         v = f'vodtemp/{youlist[0]}'
         print(len(youlist))
+        d = convertdate(v)
     else:
         v = f'vodtemp/{os.listdir("vodtemp")[0]}'  
         youlist = False
-    
+        d = convertdate(v)
+    v4 = 'video'
 
 while True:
     #Allows for the recapture of video to reduce delay.
@@ -88,6 +91,7 @@ while True:
             z = 0       
             frames = 0
             framez = []
+            v = f'vodtemp/{youlist[incr]}'            
             d = convertdate(v)
     if succ:
         frames = sum([frames, 1])
@@ -101,7 +105,7 @@ while True:
                 continue
             else:
                 cv2.imwrite('temp/temp.jpg', frame)
-                #os.system('jp2a --colors --fill temp/temp.jpg')
+                os.system('jp2a --colors --fill temp/temp.jpg')
                 state = 2
                 count = 0
 #     #Writes temp.jpg, which will be used to generate meta data
@@ -124,6 +128,8 @@ while True:
             if count > 1300:
                 state = 1
                 count = 0
+                cv2.imwrite(f'temp/tempx.jpg', frame)
+                os.system('jp2a temp/tempx.jpg --colors -fill')
                 shutil.rmtree('temp')
                 print('GO TIMEOUT, RETURN TO MONKE')
         #creates a file structure for data if the race start is detected
@@ -142,7 +148,7 @@ while True:
             os.makedirs('temp')
             print("g")
             count = 0
-            if v3 != 'video':
+            if v4 != 'video':
                 stopwatchx = Stopwatch()
             else:
                 framez.append(frames)
@@ -152,7 +158,7 @@ while True:
             count = 0
             todo = linecount('todo.txt')
             write(f'{cn}/{d}/{number}/', todo, 'todo.txt')                
-            if v3 != 'video':
+            if v4 != 'video':
                 write(str(stopwatchx.stop()), 3, f'{dir}meta.txt')
                 time.sleep(10)
                 z =0 
@@ -169,7 +175,7 @@ while True:
             cv2.imwrite(f'{dir}noprocess{count}.jpg', frame)
             print(f'                        {dir}/noprocess{count}', end='\r')
             count += 1
-            if count >= 5000:
+            if count >= 5400:
                 shutil.rmtree(dir)
                 state = 1
                 count = 0
