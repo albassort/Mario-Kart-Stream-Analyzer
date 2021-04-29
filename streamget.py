@@ -28,11 +28,15 @@ try:
     v3 = sys.argv[3]
 except:
     v3 = True
-
-v4 = None
+try:
+    v4 = sys.argv[4]
+except:
+    v4 = None
+print(v4)
 state = 1
 frames = 0
 framez =[]
+youlist = False
 #does link checking and pratitions it
 #print(cn)
 def convertdate(v):   
@@ -45,8 +49,7 @@ def convertdate(v):
     day = temp[-2:]
     d = (f'{month}-{day}-{year}') 
     return d
-
-if v3 != None:
+if v3 != 'offline' or v3 == None:
     import subprocess
     if os.path.exists('vodtemp') == False:
         os.mkdir('vodtemp')
@@ -74,8 +77,8 @@ while True:
         print('capture!\n')
         cap = cv2.VideoCapture(v)
         z = 1
-        print(incr)
         fps = cap.get(cv2.CAP_PROP_FPS)
+        print(youlist)
     succ, frame = cap.read()
     if not succ:
         load = 0
@@ -84,6 +87,7 @@ while True:
         if youlist == False:
             exit('File is probably over')
         else:
+            quit()
             if incr+1 == len(youlist):
                 exit('file over!')
             incr += 1   
@@ -160,7 +164,7 @@ while True:
             write(f'{cn}/{d}/{number}/', todo, 'todo.txt')                
             if v4 != 'video':
                 write(str(stopwatchx.stop()), 3, f'{dir}meta.txt')
-                time.sleep(10)
+                time.sleep(5)
                 z =0 
                 continue
             else:
