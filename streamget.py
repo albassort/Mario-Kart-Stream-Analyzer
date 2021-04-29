@@ -87,7 +87,6 @@ while True:
         if youlist == False:
             exit('File is probably over')
         else:
-            quit()
             if incr+1 == len(youlist):
                 exit('file over!')
             incr += 1   
