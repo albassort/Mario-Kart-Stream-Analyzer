@@ -6,28 +6,34 @@ from init import write, read, linecount  # type: ignore
 from datetime import date
 import time
 import shutil
-from stopwatch import Stopwatch
-from stringcolor import cs
+from stopwatch import Stopwatch # type: ignore
+from stringcolor import cs # type: ignore
 today = date.today()
 d = today.strftime("%b-%d-%Y")
 z = 0
 load = 0
 count = 0
 succcount = 0
+try:
+    v3 = sys.argv[3]
+except:
+    v3 = None
 v = sys.argv[1]
 v2 = sys.argv[2]
 cn = v2.partition('.tv/')[2]
 if not cn:
         print("EROR INVALID TWITCH LINK")
         print(cs('WARNING: ARG2 will now be interpreted as out folder name.', '#F93148'))
-        cn = v2
+        cn = v2     
+        print(v.partition('youtube.com/')[1])
+        if not v.partition('youtube.com/')[1]:
+            print("")
+            print(cs('WARNING: OFFLINE VIDEO MODE. WILL END AT THE END OF PLAYBACK OF A GIVEN VIDEO FILE', '#F93148'))
+            v3 = 'offline'
+            youlist = False
 else:        
     cn = cn.partition('/')[0]
 
-try:
-    v3 = sys.argv[3]
-except:
-    v3 = True
 try:
     v4 = sys.argv[4]
 except:
@@ -36,7 +42,6 @@ print(v4)
 state = 1
 frames = 0
 framez =[]
-youlist = False
 #does link checking and pratitions it
 #print(cn)
 def convertdate(v):   
@@ -49,17 +54,22 @@ def convertdate(v):
     day = temp[-2:]
     d = (f'{month}-{day}-{year}') 
     return d
-if v3 != 'offline' or v3 == None:
+if v3 != 'offline':
+    print(v3)
     import subprocess
     if os.path.exists('vodtemp') == False:
         os.mkdir('vodtemp')
 #    else:
    #     shutil.rmtree('vodtemp')
    #     os.mkdir('vodtemp')
-    p = subprocess.Popen(['youtube-dl', '-f', '243', v3,
+    p = subprocess.Popen(['youtube-dl', '-f', '243', v,
                       '-o', 'vodtemp/%(upload_date)s.%(ext)s'])
     p.wait()
-    if v3.partition('list')[1]:
+    if p.returncode != 0:
+        exit(cs(f'ERROR DOWNLOADING: {v}.\nexiting...', '#F93148'))
+    #defines youlist --- which is used to select videos to playback
+    #if its not a video list, its just one and does not loop.
+    if v.partition('list')[1]:
         incr = 0
         youlist = os.listdir("vodtemp")
         v = f'vodtemp/{youlist[0]}'
@@ -87,8 +97,9 @@ while True:
         if youlist == False:
             exit('File is probably over')
         else:
-            if incr+1 == len(youlist):
-                exit('file over!')
+            if youlist:
+                if incr+1 == len(youlist):
+                    exit('file over!')
             incr += 1   
             succcount = 0 
             z = 0       
@@ -151,17 +162,31 @@ while True:
             os.makedirs('temp')
             print("g")
             count = 0
-            if v4 != 'video':
+            if v2 != cn:
                 stopwatchx = Stopwatch()
             else:
                 framez.append(frames)
+            skip = 0
             state = 3
+        if state == 3: 
+           # if skip != 0:
+            #    skip = 0 
+             #   continue 
+            cv2.imwrite(f'{dir}noprocess{count}.jpg', frame)
+            print(f'                        {dir}/noprocess{count}', end='\r')
+            count += 1
+            if count >= 2700:
+                shutil.rmtree(dir)
+                state = 1
+                count = 0
+            #skip += 1
         if state == 4:
             state = 1
             count = 0
             todo = linecount('todo.txt')
             write(f'{cn}/{d}/{number}/', todo, 'todo.txt')                
-            if v4 != 'video':
+            if cn != v2:
+                #does an offline checkf
                 write(str(stopwatchx.stop()), 3, f'{dir}meta.txt')
                 time.sleep(5)
                 z =0 
@@ -174,14 +199,6 @@ while True:
                 write(stoptime, 3, f'{dir}meta.txt')
                 write(v, 4, f'{dir}meta.txt')
                 framez = []
-        if state == 3:
-            cv2.imwrite(f'{dir}noprocess{count}.jpg', frame)
-            print(f'                        {dir}/noprocess{count}', end='\r')
-            count += 1
-            if count >= 5400:
-                shutil.rmtree(dir)
-                state = 1
-                count = 0
         #check if 
         #attempts to gate out false positives with -5
         #it will wait 25 frames, and if it is still reading loading, it will actually  register loading load
@@ -193,4 +210,4 @@ while True:
                 state = -5
                 count = 0
         state = pix(frame, int(state))
-        print(str(state)+' '+v, end = '\r')
+        print(str(state)+' '+v+f' {succcount}', end = '\r')
