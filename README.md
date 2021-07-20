@@ -28,9 +28,15 @@ There are 4 scripts intended to be interfaced with by you from the terminal
 Interfacing with streamget is very simple. 
 
 `./streamget.sh https://www.twitch.tv/MyFavoriteTwitchStreamer`
+you can use vods or video files:
+(make sure files are in 360p currently!
+`python streamget.py videofile.mp4 outputname/`
+you can also downloads videos from youtube or twitch
+`python streamget.py videolink.com outputname`
+this even works for playlists!
+(just make sure everything is in 360p for now. 720p and 1080p coming at a later time)
 
 streamget.sh works by connecting to MYFS and piping the frames into streamget.py. CV2 will then importt the frame and analyize
-
 pixget.py is then caleld to do pixel checks. pixget pingpongs bettween streamget.py managing the states.
 
 upon confirmed 'go', a channel, at ./MFTS/date/${digit} (digit is equal to (ls | wc -l )-1)
