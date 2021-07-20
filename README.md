@@ -28,18 +28,36 @@ There are 4 scripts intended to be interfaced with by you from the terminal
 Interfacing with streamget is very simple. 
 
 `./streamget.sh https://www.twitch.tv/MyFavoriteTwitchStreamer`
+
+
 you can use vods or video files:
+
+
 (make sure files are in 360p currently!
+
+
 `python streamget.py videofile.mp4 outputname/`
+
+
 you can also downloads videos from youtube or twitch
+
+
 `python streamget.py videolink.com outputname`
+
+
 this even works for playlists!
 (just make sure everything is in 360p for now. 720p and 1080p coming at a later time)
+
+
 in addition:
 
 Half and quarter modes for offline!
+
+
 use -q or -h in arg3 for half and quarter mode. It will save 1/2 or 1/4th of the frames
 note: this reduces overall accuracy due to much less detail.
+
+
 `python streamget.py videofile.mp4 outputname/ -q` or `python streamget.py videofile.mp4 outputname/ -h`
 
 streamget.sh works by connecting to MYFS and piping the frames into streamget.py. CV2 will then importt the frame and analyize
