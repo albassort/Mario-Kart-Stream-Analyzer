@@ -95,5 +95,5 @@ V1 has some issues. My roadmap is as follows
 
 -Add item detection 
 
--Add the ability to scrape twitch bets ((BETA FEATURE, PLEASE CONTACT ME IF YOU ARE A PARTNER AND WANT TO HEL DEVEOPLENT!!!!!!!!!!!!!!!!!!!!!!!!!!!))
+-Add the ability to scrape twitch bets ((BETA FEATURE, PLEASE CONTACT ME IF YOU ARE A PARTNER AND WANT TO HELP DEVEOPLENT!!!!!!!!!!!!!!!!!!!!!!!!!!!))
 
