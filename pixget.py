@@ -1,5 +1,4 @@
 from PIL import Image
-import time
 def sebn(itul, out):
     num = len(itul)
     #previously hacky newb globals stuff
@@ -117,9 +116,13 @@ def getplayers(img):
     else:
         p = 0
         for x in range(0, 11):
+            print(plce[x])
             if plce[x] == False:
-                return p
+                break
             p += 1
-
+        return p
 #getplayers('temp54.jpg')
 
+
+if __name__ == '__main__':
+    exit("This script is not to be ran standalone, and only exists as a module for streamget.py.")

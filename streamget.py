@@ -9,91 +9,84 @@ import shutil
 from stopwatch import Stopwatch # type: ignore
 from stringcolor import cs # type: ignore
 today = date.today()
-d = today.strftime("%b-%d-%Y")
-z = 0
+recordate = today.strftime("%b-%recordate-%Y")
+resetswitch = 0 
 load = 0
 count = 0
-succcount = 0
-try:
-    v3 = sys.argv[3]
-except:
-    v3 = None
-v = sys.argv[1]
-v2 = sys.argv[2]
-cn = v2.partition('.tv/')[2]
-if not cn:
-        print("EROR INVALID TWITCH LINK")
-        print(cs('WARNING: ARG2 will now be interpreted as out folder name.', '#F93148'))
-        cn = v2     
-        print(v.partition('youtube.com/')[1])
-        if not v.partition('youtube.com/')[1]:
-            print("")
-            print(cs('WARNING: OFFLINE VIDEO MODE. WILL END AT THE END OF PLAYBACK OF A GIVEN VIDEO FILE', '#F93148'))
-            v3 = 'offline'
-            youlist = False
-else:        
-    cn = cn.partition('/')[0]
-
-try:
-    v4 = sys.argv[4]
-except:
-    v4 = None
-print(v4)
+framefail = 0
 state = 1
 frames = 0
-framez =[]
+framez = []
+video = sys.argv[1]
+v2 = sys.argv[2]
+offline = False
+channelname = v2.partition('.tv/')[2]
+if not channelname:
+        print("EROR INVALID TWITCH LINK")
+        print(cs('WARNING: ARG2 will now be interpreted as out folder name.', '#F93148'))
+        offline = True
+        print(video.partition('youtube.com/')[1])
+        if not video.partition('youtube.com/')[1]:
+            print("")
+            print(cs('WARNING: OFFLINE VIDEO MODE. WILL END AT THE END OF PLAYBACK OF A GIVEN VIDEO FILE', '#F93148'))
+            youlist = False
+else:        
+    channelname = channelname.partition('/')[0]
+
 #does link checking and pratitions it
-#print(cn)
-def convertdate(v):   
+#print(channelname)
+channelname = f'streamers/{channelname}'
+def convertdate(video):   
     monthconv = {'01': "Jan", '02': 'Feb', '03': 'Mar', '04': 'Apr', 
     '05': 'Jun', '06': 'Jun', '07': 'Jul', '08': 'Aug', '09': 'Sep',
     '10': 'Oct', '11': 'Nov', '12': 'Dec'}
-    temp = v.partition('.')[0].partition('/')[2]
+    temp = video.partition('.')[0].partition('/')[2]
     year = temp[:-4]
     month = (monthconv[temp[-4:][:-2]])
     day = temp[-2:]
-    d = (f'{month}-{day}-{year}') 
-    return d
-if v3 != 'offline':
-    print(v3)
+    recordate = (f'{month}-{day}-{year}') 
+    return recordate
+if offline:
     import subprocess
     if os.path.exists('vodtemp') == False:
         os.mkdir('vodtemp')
 #    else:
    #     shutil.rmtree('vodtemp')
    #     os.mkdir('vodtemp')
-    p = subprocess.Popen(['youtube-dl', '-f', '243', v,
+    p = subprocess.Popen(['youtube-dl', '-f', '134', video,
                       '-o', 'vodtemp/%(upload_date)s.%(ext)s'])
     p.wait()
     if p.returncode != 0:
-        exit(cs(f'ERROR DOWNLOADING: {v}.\nexiting...', '#F93148'))
+        exit(cs(f'ERROR DOWNLOADING: {video}.\nexiting...', '#F93148'))
     #defines youlist --- which is used to select videos to playback
     #if its not a video list, its just one and does not loop.
-    if v.partition('list')[1]:
+    if video.partition('list')[1]:
         incr = 0
         youlist = os.listdir("vodtemp")
-        v = f'vodtemp/{youlist[0]}'
+        video = f'vodtemp/{youlist[0]}'
         print(len(youlist))
-        d = convertdate(v)
+        recordate = convertdate(video)
     else:
-        v = f'vodtemp/{os.listdir("vodtemp")[0]}'  
+        video = f'vodtemp/{os.listdir("vodtemp")[0]}'  
         youlist = False
-        d = convertdate(v)
-    v4 = 'video'
+        recordate = convertdate(video)
+
+
 
 while True:
     #Allows for the recapture of video to reduce delay.
-    if z != 1:
+    if resetswitch != 1:
         print('capture!\n')
-        cap = cv2.VideoCapture(v)
-        z = 1
+        cap = cv2.VideoCapture(video)
+        resetswitch = 1
         fps = cap.get(cv2.CAP_PROP_FPS)
         print(youlist)
+        #is a reset switched used to recapture twitch streams to reduce latency.
     succ, frame = cap.read()
+    #if it fails to load it increments the fail. And if it fails too many time it exists 
     if not succ:
-        load = 0
-        succcount += 1
-    if succcount >= 20:
+        framefail += 1
+    if framefail >= 20:
         if youlist == False:
             exit('File is probably over')
         else:
@@ -101,17 +94,19 @@ while True:
                 if incr+1 == len(youlist):
                     exit('file over!')
             incr += 1   
-            succcount = 0 
-            z = 0       
+            framefail = 0 
+            resetswitch = 0       
             frames = 0
             framez = []
-            v = f'vodtemp/{youlist[incr]}'            
-            d = convertdate(v)
+            video = f'vodtemp/{youlist[incr]}'            
+            recordate = convertdate(video)
+
+    #if it sucessfully reads the frame...        
     if succ:
         frames = sum([frames, 1])
-        if load == 0:
-            succcount = 0
-            load = 1
+        #if framefail isn't falsy reset the count.
+        if framefail:
+            framefail = 0
         if state == -1:
             if count < 110:
                 count += 1
@@ -153,43 +148,37 @@ while True:
                 count += 1
                 continue
             print('go detected, doin stuff')
-            if os.path.exists(f'{cn}/{d}/') == False:
-                os.makedirs(f'{cn}/{d}/')
-            number = len(os.listdir(f'{cn}/{d}/'))
-            dir = f'{cn}/{d}/{number}/'
+            if os.path.exists(f'{channelname}/{recordate}/') == False:
+                os.makedirs(f'{channelname}/{recordate}/')
+            number = len(os.listdir(f'{channelname}/{recordate}/'))
+            dir = f'{channelname}/{recordate}/{number}/'
             write("", 0, f'{dir}meta.txt')
             shutil.move('temp', dir)
             os.makedirs('temp')
             print("g")
             count = 0
-            if v2 != cn:
+            if not offline:
                 stopwatchx = Stopwatch()
             else:
                 framez.append(frames)
-            skip = 0
             state = 3
         if state == 3: 
-           # if skip != 0:
-            #    skip = 0 
-             #   continue 
             cv2.imwrite(f'{dir}noprocess{count}.jpg', frame)
-            print(f'                        {dir}/noprocess{count}', end='\r')
+            print(f'                                  {dir}/noprocess{count}', end='\r')
             count += 1
-            if count >= 2700:
+            if count >= 5000:
                 shutil.rmtree(dir)
                 state = 1
                 count = 0
-            #skip += 1
         if state == 4:
             state = 1
             count = 0
             todo = linecount('todo.txt')
-            write(f'{cn}/{d}/{number}/', todo, 'todo.txt')                
-            if cn != v2:
-                #does an offline checkf
+            write(f'{channelname}/{recordate}/{number}/', todo, 'todo.txt')                
+            if not offline:
+                #does an offline check
                 write(str(stopwatchx.stop()), 3, f'{dir}meta.txt')
-                time.sleep(5)
-                z =0 
+                resetswitch = 0 
                 continue
             else:
                 framez.append(frames)
@@ -197,7 +186,7 @@ while True:
                 stoptime = (framez[1] - framez[0])
                 stoptime = f'{float(stoptime/30)}s'
                 write(stoptime, 3, f'{dir}meta.txt')
-                write(v, 4, f'{dir}meta.txt')
+                write(video, 4, f'{dir}meta.txt')
                 framez = []
         #check if 
         #attempts to gate out false positives with -5
@@ -210,4 +199,4 @@ while True:
                 state = -5
                 count = 0
         state = pix(frame, int(state))
-        print(str(state)+' '+v+f' {succcount}', end = '\r')
+        print(str(state)+' '+video+f' {framefail}', end = '\r')

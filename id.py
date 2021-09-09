@@ -18,7 +18,7 @@ import time
 done = 0
 try:
     arg1 = sys.argv[1]
-except:
+except IndexError:
     arg1 = 0
 if arg1 == '-regen':
     for x in (range(1, 13)):

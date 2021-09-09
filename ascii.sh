@@ -11,15 +11,12 @@ if [[ ${1} == 'id' ]]; then
             figlet '* done *'
         fi
     done    
-    echo "1" > cache.txt
 elif [[ ${1} == 'convert' ]]; then
-    sed -i "${6}s"'/.*/ 0 /' cache.txt
     i=$2
     while [ $i -le "$3" ]; do
     convert ${4}/noprocess${i}.jpg -crop 1500x1500+530+280 -type Grayscale processed/${5}/rank/rank${i}.jpg
     i=$(($i + 1))
     done
-    sed -i "${6}s"'/.*/1 /' cache.txt
 else
     ls ${2}/*.jpg|
     while read line; do
@@ -30,5 +27,4 @@ else
     if [[ $(which figlet 2> /dev/null) ]]; then
         figlet '* done *'
     fi
-    echo "1" > cache.txt
 fi

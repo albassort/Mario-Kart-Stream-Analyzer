@@ -49,7 +49,7 @@ def read(line, file):
     #...reads file
     try:
         return open(file).readlines()[line].rstrip()
-    except:
+    except LookupError or FileExistsError:
         return "File or line doesn't exist"
 def readall(file):
     baby = []
@@ -69,7 +69,7 @@ def linecount(file):
             #if an item is sempty it will return 0, and there is no line -1, so return 0
             linxc =+ 1
         return linxc
-    except:
+    except Exception:
         return 0    
 def ocr_core(f):
     #uses pytesseract to open an image and output string
@@ -78,3 +78,5 @@ def ocr_core(f):
     text = text.lstrip(' ')
     #filters noise
     return text
+if __name__ == '__main__':
+    exit("This script is not to be ran standalone, and only exists as a module for streamget.py.")

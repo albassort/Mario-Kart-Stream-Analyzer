@@ -9,7 +9,8 @@ from init import read, readall  # type: ignore
 #plt.show()
 #plt.savefig('foo.png')
 
-#holy fuck this is over 300 lines of code and i didn't comment any of it as i was writing, i am very fucked.
+#holy fuck this is over 300 lines of code and i didn't comment any of it as i was writing...
+#good thing its pretty self explanitory.
 def caclulateavg(channel, list, line):
     avg = []
     for x in list:
@@ -28,8 +29,8 @@ def caclulateavg(channel, list, line):
                 return f'{sum(avg)/len(avg)}s'
         else:
             return sum(avg)/len(avg)
-    except:
-        return 'error'
+    except ZeroDivisionError:
+        return 'ZeroDivisionError!'
 def underscore():
     print(cs('____________________________________________', '#24abb3'))
 readlookup = {0: 'Course: ', 1: 'Players: ',  2: 'Final Rank Entry: ', 3: 'Averege Rank: ', 4: 'Lowest Place: ',  5: 'Highest Place: ',
@@ -82,38 +83,45 @@ def copypasta(str1, str2, y):
 state = 1
 redo = 0
 death = True
-tempx = []
-temp = os.listdir()
+listofchannels = []
+temp = os.listdir("streamers/")
 load = 0
+
 for x in temp:
-    if os.path.exists(x+'/out') == True:
-        tempx.append(x)
+    if os.path.exists("streamers/"+x+'/out') == True:
+        listofchannels.append(f"streamers/{x}")
     else:
         pass
+#While you are in limbo; i suppose....
 while death == True:
     while state == 1:
         if redo != 1:
             underscore()
             temp =[]
-            print(cs(str(len(tempx))+' channel found', '#21db65c'))
-            if len(tempx) == 0:
+            print(cs(str(len(listofchannels))+' channel found', '#21db65c'))
+            if len(listofchannels) == 0:
                 print('no channels detected.')
                 death = False
                 state = 0
                 continue
-            for x in range(0, len(tempx)):
-                print(cs(str(x), '#21db65c')+': '+tempx[x])
+            for x in range(0, len(listofchannels)):
+                print(cs(str(x), '#21db65c')+': '+listofchannels[x])
+            #channel is the input, reads the input...   
             channel = input('please give channel, you can use the digits above to select <3\nx to quit\n' )
+        #input branch.
+
         if channel == 'x':
             death = False
             state = 0
             continue
         elif channel.isdigit() == True:
+            #cleaver me.
             try:
-                channel = tempx[int(channel)]
-            except:
+                channel = listofchannels[int(channel)]
+            except LookupError:
                 print('index out of range, please try again')
                 continue
+
         elif os.path.exists(f'{channel}/out') == False:
             print('invalid channel, please try again')
             continue        
@@ -121,10 +129,12 @@ while death == True:
         dirx = os.listdir(f'{channel}/out')
         underscore()
         print(cs(f'{len(dirx)} ', '#21db65c')+f'''folders found\nwhat would you like to look at?
+
 {printoptions()}
 6. Go by course
 ? to print this again
 x to back to channel select''')
+
         state = 2
     while state == 2:
         z = input()
