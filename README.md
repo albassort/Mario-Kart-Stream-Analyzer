@@ -54,12 +54,6 @@ in addition:
 Half and quarter modes for offline!
 
 
-use -q or -h in arg3 for half and quarter mode. It will save 1/2 or 1/4th of the frames
-note: this reduces overall accuracy due to much less detail.
-
-
-`python streamget.py videofile.mp4 outputname/ -q` or `python streamget.py videofile.mp4 outputname/ -h`
-
 streamget.sh works by connecting to MYFS and piping the frames into streamget.py. CV2 will then importt the frame and analyize
 pixget.py is then caleld to do pixel checks. pixget pingpongs bettween streamget.py managing the states.
 
