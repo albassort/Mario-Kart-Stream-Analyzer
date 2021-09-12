@@ -79,32 +79,29 @@ def penme(todo):
 
 def writedata():
     subprocess.Popen(
-        ['convert', f'{todo}/temp/temp50.jpg', '-crop', '640x360+210+315', '-crop', '-200-20', '-type', 'Grayscale', '-sharpen', '0x12', f'{exdir}/boop.jpg'])
+        ['convert', f'{todo}/temp/temp50.jpg', '-crop', '640x360+210+315', '-crop', '-200-20', '-type', 'Grayscale', '-sharpen', '0x12', f'{exdir}/boop.jpg']).wait()
     abonrormalmaps = {"mount wario" : 1, "n64 rainbow road" : 1, "big blue" : 1, "baby park" : 7 }
     timze = read(3, f'{todo}/meta.txt')[:-1]
     bet1 = read(0, meta)
     bet2 = read(1, f'{todo}/meta.txt')
-    ai = ocr_core(f'{exdir}/boop.jpg')
     players = getplayers(f'{exdir}/temp50.jpg')
     #so it turns out, i moved all of the rank functions to bedone in ascii main to keep everything concise and reduce serialization/
     #having to do stupid return things. ALl of the rank writing is done in ascii main, so if you're looking for that
     #please go there
-    write(ai, 0, meta)
     write(players, 1, meta)
     write(f'{timze} seconds', 6, meta)
     #gets averege lap given 3 laps.
     #replacing with fuzzy search dictonaries with a list of Mario Kart 8... dunno if i should 
     #write the fuzzy myself or use a library. probably writing myself tbh
-    if ai in abonrormalmaps:
-        write(f'{float(timze)/abonrormalmaps[ai]} seconds', 7, meta)
     write(f'{float(timze)/3} seconds', 7, meta)
-
     write(bet1, 8, meta)
     write(bet2, 9, meta)
     write(todo, 10, meta)
     write(f'{processedir}', 11, meta)
-    write(ocr_core(f'{exdir}/boop.jpg'), 0, meta)
-
+    ai = ocr_core(f'{exdir}/boop.jpg')
+    if ai in abonrormalmaps:
+        write(f'{float(timze)/abonrormalmaps[ai]} seconds', 7, meta)
+    write(ai, 0, meta)
     with open(f'{todo}/done.loc', 'w') as temp:
         temp.close
 
@@ -113,7 +110,11 @@ for folder in os.listdir("streamers/"):
     for subfolder in os.listdir(f'streamers/{folder}'):
         if subfolder.partition("out")[1]:
             continue
+
         for todo in os.listdir(f'streamers/{folder}/{subfolder}'):
+            if subfolder.partition("out")[1]:
+                continue
+
             outfol = f'streamers/{folder}/'
             todo = f'streamers/{folder}/{subfolder}/{todo}'
             if not os.path.exists(f'{outfol}/out/'):
@@ -127,14 +128,15 @@ for folder in os.listdir("streamers/"):
             v = len(os.listdir('processed/'))
             timer = stopwatch()
             print(todo)
-            exdir = (f'{outfol}/out/{len(os.listdir(f"{outfol}out/"))}')
+            exdir = (f'{outfol}out/{len(os.listdir(f"{outfol}out/"))}')
             processedir = f"processed/{v}"    
             os.mkdir(exdir)
             shutil.copy(f'{todo}/temp/temp50.jpg', exdir)
             meta = f'{exdir}/meta.txt'
             penme(todo)
             writedata()
-            print(timer.stop)
+            timer.stop
+            print(timer)
 #line 1 = Stage
 # 2 = players
 # 3 = final rank entry

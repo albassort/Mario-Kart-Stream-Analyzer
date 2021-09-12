@@ -9,7 +9,7 @@ import shutil
 from stopwatch import Stopwatch # type: ignore
 from stringcolor import cs # type: ignore
 today = date.today()
-recordate = today.strftime("%b-%recordate-%Y")
+recordate = today.strftime("%m-%d-%Y")
 resetswitch = 0 
 load = 0
 count = 0
@@ -19,20 +19,20 @@ frames = 0
 framez = []
 video = sys.argv[1]
 v2 = sys.argv[2]
+
 offline = False
 channelname = v2.partition('.tv/')[2]
+
 if not channelname:
         print("EROR INVALID TWITCH LINK")
         print(cs('WARNING: ARG2 will now be interpreted as out folder name.', '#F93148'))
         offline = True
         print(video.partition('youtube.com/')[1])
+        channelname = v2
         if not video.partition('youtube.com/')[1]:
             print("")
             print(cs('WARNING: OFFLINE VIDEO MODE. WILL END AT THE END OF PLAYBACK OF A GIVEN VIDEO FILE', '#F93148'))
             youlist = False
-else:        
-    channelname = channelname.partition('/')[0]
-
 #does link checking and pratitions it
 #print(channelname)
 channelname = f'streamers/{channelname}'
@@ -80,7 +80,6 @@ while True:
         cap = cv2.VideoCapture(video)
         resetswitch = 1
         fps = cap.get(cv2.CAP_PROP_FPS)
-        print(youlist)
         #is a reset switched used to recapture twitch streams to reduce latency.
     succ, frame = cap.read()
     #if it fails to load it increments the fail. And if it fails too many time it exists 
@@ -173,8 +172,6 @@ while True:
         if state == 4:
             state = 1
             count = 0
-            todo = linecount('todo.txt')
-            write(f'{channelname}/{recordate}/{number}/', todo, 'todo.txt')                
             if not offline:
                 #does an offline check
                 write(str(stopwatchx.stop()), 3, f'{dir}meta.txt')

@@ -1,0 +1,12 @@
+Mount Wario
+12
+4
+5.354265073631565
+3
+7
+123.96666666666667 seconds
+41.32222222222222 seconds
+
+
+streamers/testoutput/Sep-02-2021/3
+processed/0

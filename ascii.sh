@@ -1,3 +1,4 @@
+#!/bin/bash
 if [[ ${1} == 'id' ]]; then
     for i in {1..12}; do 
         ls "id/${i}/"|
