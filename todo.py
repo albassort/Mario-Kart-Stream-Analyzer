@@ -12,15 +12,20 @@ import subprocess
 from asciidetection import gen, asciimain  # type: ignore
 
 
-def penme(todo):
+def penme(todo, pindex):
     v1 = len(os.listdir(todo))-4
     v1 = (int(v1/4), int(v1) % 4)
+    holder = False
     #counts the amount of files in todo and creates 1/4 slices for
     state = []
-    if v != 0:
+    if pindex != 0:
         #detects if the images are already genered
-        for x in range(0, int(v)):
+        for x in range(0, int(pindex)):
             #reads ID from all of processed/
+            if not os.path.exists(f"processed/{x}/id.txt"):
+                shutil.rmtree(f"processed/{x}")
+                pindex = x
+                break
             match = read(0, f'processed/{x}/id.txt')
             if match == todo:
                 state.append(1)
@@ -37,16 +42,16 @@ def penme(todo):
 
 
         p = subprocess.Popen(['bash', 'ascii.sh', 'convert',
-                          str(1), str(v1[0]), todo, str(v), str(1)])
+                          str(1), str(v1[0]), todo, str(pindex), str(1)])
 
         p1 = subprocess.Popen(['bash', 'ascii.sh', 'convert', 
-         str(v1[0]), str(v1[0]*2), todo, str(v), str(2)])
+         str(v1[0]), str(v1[0]*2), todo, str(pindex), str(2)])
 
         p2 = subprocess.Popen(['bash', 'ascii.sh', 'convert',  str(
-            v1[0]*2), str(v1[0]*3), todo, str(v), str(3)])
+            v1[0]*2), str(v1[0]*3), todo, str(pindex), str(3)])
             
         p3 = subprocess.Popen(['bash', 'ascii.sh', 'convert',  str(
-            v1[0]*3), str((v1[0]*4)+v1[1]), todo, str(v), str(4)])
+            v1[0]*3), str((v1[0]*4)+v1[1]), todo, str(pindex), str(4)])
             
         p1.wait(); p2.wait(); p3.wait(); p.wait()
 
@@ -125,15 +130,15 @@ for folder in os.listdir("streamers/"):
                 os.mkdir('processed/')  
             if not os.path.exists(f"{outfol}out/"):
                 os.makedirs(f"{outfol}out/")
-            v = len(os.listdir('processed/'))
+            pindex = len(os.listdir('processed/'))
             timer = stopwatch()
             print(todo)
             exdir = (f'{outfol}out/{len(os.listdir(f"{outfol}out/"))}')
-            processedir = f"processed/{v}"    
+            processedir = f"processed/{pindex}"    
             os.mkdir(exdir)
             shutil.copy(f'{todo}/temp/temp50.jpg', exdir)
             meta = f'{exdir}/meta.txt'
-            penme(todo)
+            penme(todo, pindex)
             writedata()
             timer.stop
             print(timer)
