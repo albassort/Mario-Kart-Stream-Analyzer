@@ -1,7 +1,7 @@
 # Mario-Kart-Stream-Analyzer
 **By Caroline Marceano**
 
-A python script that watches mario cart footage, and outputs rank data
+A python script that watches Mario Kart footage, and outputs rank data
 
 # Version 2 notes:
     1. Todo.py was completely removed
