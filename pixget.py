@@ -15,7 +15,7 @@ def pix(frame, inx):
         ib3 = 140 <= btwtul[2][0] <= 230
         ib4 = 140 <= btwtul[2][1] <= 230
         ib5 = 140 <= btwtul[2][2] <= 230
-        ibl1 = (ib1, ib2, ib3, ib4, ib5)    #ib1-6 are composite rgb values because innacuracy is unlikely
+        ibl1 = (ib1, ib2, ib3, ib4, ib5)    #ib1-6 are composite rgb values because inaccuracy is unlikely
     #ib7-13 are the 6 RGB values for ending to create a very specific very false positive proof check
     if int(inx) == 2:
         #Go, only triggers while waiting for race start
@@ -36,7 +36,7 @@ def pix(frame, inx):
         go9 = 0 <= b2 <= 70
         goftul = [go1, go2, go3, go4, go5, go6, go7, go8, go9]
     if int(inx) == 3:
-        #End Checuk, only triggers while race in progress
+        #End Check, only triggers while race in progress
         c7 = img.getpixel((354,133)); c8 = img.getpixel((420,156)); c9 = img.getpixel((220,152))
         (b6, g6, r6) = c7; 
         (b7, g7, r7) = c8; 
@@ -71,9 +71,9 @@ def pix(frame, inx):
     #Loading check
     if int(inx) == 2:
         if all(goftul) == True:
-            #outputs -3 for upper script to inturpret and route to 3
+            #outputs -3 for upper script to interpret and route to 3
             return int(-3)
-        #outputs -2 to upper script to count untill error out to 1
+        #outputs -2 to upper script to count until error out to 1
         else:
             return int(-2)  
     #End Check
