@@ -15,6 +15,8 @@ A python script that watches mario cart footage, and outputs rank data
     8. streamers were moved to /archive
     9. no more /streamers/streamer/out, the input is also the output dir. 
 (all this data was generated using ```https://www.youtube.com/watch?v=1lDOgP-Kh3s```)
+
+
 This has all translated to a technical speed increase of about 100000x if you include download times. Outside of download times, a test yielded a result of 216s vs 1587s (new vs old) or a 7.34x increase in speed. This was recorded on a i5-4570S on DDR3 1300Mhz ram. Ram and CPU threads will greatly improve performance.
 
 Individual compile times are around 3.3s. As opposed to the old times of 30s +.
@@ -43,26 +45,38 @@ This is done automatically in installdeps, so if you've run it this processes wa
 Because of this method, the quality of the output is based entirely upon the reference images. 
 If you wish to expand upon this reference, its best to extract the frames from the ``video.avi`` outputed from compilation; however you can can process any image the same way with the ``process` function in streamget.py
 
+# what is stats.py? 
+
+stats.py is the builtin data-explorer! It helps you get a general idea of the data collected.
+
 # How do i run it?
 `streamget.sh, todo.py, stats.py id.py`
+
+
 MKSA currently supports youtube and Twitch
 
 # from a youtube video:
 Be sure that your video is available in 360p30!
+
+
 ``python streamget.py youtubevideo``
+
+
 It really is that simple. It will download it and it will automatically watch and write its output.
 check archive/youtubechannel/update for the output.
 
 # from a live twitch stream
 ``./streamget.sh https://twitch.tv/yourfavoritetwitchstreamer``
+
+
 Same as stated above, be sure that a 360p30 stream is avalible
 
 # Why am i getting no output?
-Currently MKSA is not a very dynamic thing. 
-This could be done at another time, if i decide to continue working on it.
+Currently MKSA is not a very dynamic thing.  This could be done at another time, if i decide to continue working on it.
+
+
 You must be sure that the center and lower end of the stream is not obstructed with a hud of any kid
 
-folder is appended to todo.txt for later 'compilation'.
 
 # What does the future hold for MKSA?
 Not much. Maybe a Nim-recode if I ever feel the need to continue this.
