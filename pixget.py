@@ -1,10 +1,4 @@
 from PIL import Image
-def sebn(itul, out):
-    num = len(itul)
-    #previously hacky newb globals stuff
-    for ix in range(0, num):
-       itul[int(ix)]
-       out.append(sum(itul[int(ix)]))
 def pix(frame, inx):
     # Reads the image from a parrent script through pipe:0
     img = Image.fromarray(frame)   
@@ -64,7 +58,6 @@ def pix(frame, inx):
     if int(inx) == 1:
            # print(ibl1)
         if all(ibl1) == True:
-            print(btwtul)
             return int(-5)
         else:
             return int(1)
@@ -101,28 +94,29 @@ def pix(frame, inx):
 #print(r8, g8, b8)
 #print(l1(0))
 def getplayers(img):
-    img = Image.open(img)
+    img = Image.fromarray(img)
+    #gets consistant player pixel locations
     placetuples = [img.getpixel((220, 40)), img.getpixel((300, 82)), img.getpixel((300, 127)), img.getpixel((300, 172)), img.getpixel((300, 218)), img.getpixel(
     (300, 270)), img.getpixel((540, 40)), img.getpixel((540, 87)), img.getpixel((540, 130)), img.getpixel((540, 174)), img.getpixel((540, 223)), img.getpixel((540, 260))]
-    outlist = []
-    sebn(placetuples, outlist)
+
+    pixelSums = []
+    for place in range(0, len(placetuples)):
+       pixelSums.append(sum(placetuples[place]))
     plce = []
+
+    #this seems unreliable.
     for x in range(0, 12):
-        pib = 500 <= outlist[x] <= 800
+        pib = 500 <= pixelSums[x] <= 800
         plce.append(pib)
-    print(plce)
     if all(plce):
         return 12   
     else:
         p = 0
         for x in range(0, 11):
-            print(plce[x])
             if plce[x] == False:
                 break
             p += 1
         return p
-#getplayers('temp54.jpg')
-
 
 if __name__ == '__main__':
     exit("This script is not to be ran standalone, and only exists as a module for streamget.py.")

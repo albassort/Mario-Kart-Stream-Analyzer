@@ -1,29 +1,22 @@
-#import matplotlib.pyplot as plt
 import os
 from stringcolor import cs
-from init import read, readall  # type: ignore
-#arg1 = sys.argv[1]
-#wrong = readall(f'{arg1}/rank.txt')
-#plt.plot(wrong)
-#plt.ylabel('rank')
-#plt.show()
-#plt.savefig('foo.png')
+from readwrite import read, readall
 
-#holy fuck this is over 300 lines of code and i didn't comment any of it as i was writing...
-#good thing its pretty self explanitory.
-def caclulateavg(channel, list, line):
+def caclulateavg(list, line):
     avg = []
-    for x in list:
-        readx = read(line, f'{channel}/out/{x}/meta.txt')
-        if readx == 'None' or readx == '':
-            readx = 12
-        if line == 6 or line ==7:
-            readx = readx[:-1]
-        try: 
-            float(readx)
-        except ValueError:
-            readx = 12
-        avg.append(float(readx))
+    list 
+    for game in list:
+            readx = read(line, f'{game}/meta.txt')
+            if readx == 'None' or readx == '':
+                #If no players, assume its 12
+                readx = 12
+            if line == 6 or line ==7:
+                readx = readx[:-1]
+            try: 
+                float(readx)
+            except ValueError:
+                readx = 12
+            avg.append(float(readx))
     try:
         if line == 6 or line == 7:
                 return f'{sum(avg)/len(avg)}s'
@@ -31,26 +24,30 @@ def caclulateavg(channel, list, line):
             return sum(avg)/len(avg)
     except ZeroDivisionError:
         return 'ZeroDivisionError!'
+
+
+
 def underscore():
     print(cs('____________________________________________', '#24abb3'))
 readlookup = {0: 'Course: ', 1: 'Players: ',  2: 'Final Rank Entry: ', 3: 'Averege Rank: ', 4: 'Lowest Place: ',  5: 'Highest Place: ',
               6: 'Total Time: ', 7: 'Averege Time For 3 Laps: ', 8: 'Starting Bet: ', 9: 'Ending Bet: ', 10: 'Origin Path: ', 11: 'Image Path: '}
-def printoptions(O= 0):
+def printoptions(O = 0):
+
     if O == 0:
         return '''
-1.Avg End Rank
-2.Total Avg Rank
-3.Avg players?
-4.Avg lows/highs per game
-5.Avg time total'''
+                1.Avg End Rank
+                2.Total Avg Rank
+                3.Avg players?
+                4.Avg lows/highs per game
+                5.Avg time total'''
     elif O != 0:
         return'''
-1.Avg End Rank
-2.Total Avg Rank
-3.Avg players?
-4.Avg lows
-5.highs per game
-6.Avg time total'''
+                1.Avg End Rank
+                2.Total Avg Rank
+                3.Avg players?
+                4.Avg lows
+                5.highs per game
+                6.Avg time total'''
 def printavglist(y):
     temp = []
     temp2 = []
@@ -84,14 +81,13 @@ state = 1
 redo = 0
 death = True
 listofchannels = []
-temp = os.listdir("streamers/")
+temp = os.listdir("archive/")
 load = 0
 
 for x in temp:
-    if os.path.exists("streamers/"+x+'/out') == True:
-        listofchannels.append(f"streamers/{x}")
-    else:
-        pass
+    print(x)
+    listofchannels.append(x)
+
 #While you are in limbo; i suppose....
 while death == True:
     while state == 1:
@@ -118,22 +114,27 @@ while death == True:
             #cleaver me.
             try:
                 channel = listofchannels[int(channel)]
+                print(channel)
             except LookupError:
                 print('index out of range, please try again')
                 continue
 
-        elif os.path.exists(f'{channel}/out') == False:
+        elif os.path.exists(f'archive/{channel}') == False:
             print('invalid channel, please try again')
             continue        
+
         redo = 0
-        dirx = os.listdir(f'{channel}/out')
+        dirx = []
+        for date in os.listdir(f'archive/{channel}/'):
+            for game in os.listdir(f'archive/{channel}/{date}'):
+                dirx.append(f'archive/{channel}/{date}/{game}')
+
         underscore()
         print(cs(f'{len(dirx)} ', '#21db65c')+f'''folders found\nwhat would you like to look at?
-
-{printoptions()}
-6. Go by course
-? to print this again
-x to back to channel select''')
+        {printoptions()}
+        6. Go by course
+        ? to print this again
+        x to back to channel select''')
 
         state = 2
     while state == 2:
@@ -149,21 +150,21 @@ x to back to channel select''')
         elif int(z) > 6 or int(z) < 1:
             print('please enter a digit please 1 and 6')
         elif z == "1":
-            print(caclulateavg(channel, dirx, 2))
+            print(caclulateavg(dirx, 2))
         elif z == "2":
-            print(caclulateavg(channel, dirx, 3))
+            print(caclulateavg(dirx, 3))
         elif z == '3':
-            print(caclulateavg(channel, dirx, 1))
+            print(caclulateavg(dirx, 1))
         elif z == '4':
-            print('lows: '+str(caclulateavg(channel, dirx, 4)))
-            print('highs: '+str(caclulateavg(channel, dirx, 5)))
+            print('lows: '+str(caclulateavg(dirx, 4)))
+            print('highs: '+str(caclulateavg(dirx, 5)))
         elif z == '5':
-            print(caclulateavg(channel, dirx, 6))
-            print('assuming 3 laps, average time per lap: '+caclulateavg(channel, dirx, 7))
+            print(caclulateavg(dirx, 6))
+            print('assuming 3 laps, average time per lap: '+caclulateavg(dirx, 7))
         elif z == '6':
             dictcourse = {}
             for x in dirx:
-                course = read(0, f'{channel}/out/{x}/meta.txt')
+                course = read(0, f'{x}/meta.txt')
                 if course == '' or course == "File or line doesn't exist":
                     continue
                 if course not in dictcourse:
@@ -270,10 +271,10 @@ x to back to channel select''')
                 if load == 1:
                     underscore()
                     print(f'''select actions:
-0. select specific match and print all details
-{printoptions()}
-? to print this again
-x to back to channel select''')
+                                0. select specific match and print all details
+                                {printoptions()}
+                                ? to print this again
+                                x to back to channel select''')
                     print(select[0])
                     print(select[1])
                     load = 0
@@ -289,26 +290,26 @@ x to back to channel select''')
                     continue
                 elif sf == "1":
                     underscore()
-                    print(caclulateavg(channel, select[1], 2))
+                    print(caclulateavg(select[1], 2))
                     underscore()
                 elif sf == "2":
                     underscore()
-                    print(caclulateavg(channel, select[1], 3))
+                    print(caclulateavg(select[1], 3))
                     underscore()
                 elif sf == '3':
                     underscore()
-                    print(caclulateavg(channel, select[1], 1))
+                    print(caclulateavg(select[1], 1))
                     underscore()
                 elif sf == '4':
                     underscore()
-                    print('lows: '+str(caclulateavg(channel, select[1], 4)))
-                    print('highs: '+str(caclulateavg(channel, select[1], 5)))
+                    print('lows: '+str(caclulateavg(select[1], 4)))
+                    print('highs: '+str(caclulateavg(select[1], 5)))
                     underscore()
                 elif sf == '5':
                     underscore()
-                    print(caclulateavg(channel, select[1], 6))
+                    print(caclulateavg(select[1], 6))
                     print('assuming 3 laps, average time per lap: ' +
-                          caclulateavg(channel, select[1], 7))
+                          caclulateavg(select[1], 7))
                     underscore()
                 elif int(sf) > 5 or int(sf) > 0 :
                     print('please pick a number between 0 and 5')
@@ -337,17 +338,7 @@ x to back to channel select''')
                                     continue
                                 print(readlookup[x]+''+temp[x])
                             underscore()
-                        
-
-
-                        
-
-
-        
 if death == False:
     underscore()
-    print('Thank you for using my program!')
-    print('By Caroline M, Albassort. Listen to my music at AbnormalAudio.com')
-    print('contact at retkid#9135 on discord')
-    print('V1, Feb 2021-April 2021') 
+    print('V2, Dec-Jan 2021') 
     

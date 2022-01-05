@@ -1,3 +1,30 @@
 {
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "cSpell.words": [
+        "asciigen",
+        "avalible",
+        "dictonary",
+        "identifiying",
+        "installdeps",
+        "Marceano",
+        "matplotlib",
+        "MKSA",
+        "numpy",
+        "pixelaccses",
+        "pixget",
+        "precuser",
+        "pytesseract",
+        "pytube",
+        "readwrite",
+        "setuptools",
+        "streamget",
+        "tesseract",
+        "thefuzz",
+        "Vargskelethor",
+        "youtubechannel",
+        "youtubevideo"
+    ],
+    "cSpell.enableFiletypes": [
+        "shellscript"
+    ]
 }
