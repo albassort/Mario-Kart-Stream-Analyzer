@@ -54,7 +54,7 @@ It really is that simple. It will download it and it will automatically watch an
 check archive/youtubechannel/update for the output.
 
 # from a live twitch stream
-./streamget.sh https://twitch.tv/yourfavoritetwitchstreamer
+``./streamget.sh https://twitch.tv/yourfavoritetwitchstreamer``
 Same as stated above, be sure that a 360p30 stream is avalible
 
 # Why am i getting no output?
