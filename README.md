@@ -1,4 +1,5 @@
-# This project was made, when I was first learning Software Development. 
+# Archival Notice. Move to Gitlab & User-Friendly Alternative
+This project was made, when I was first learning Software Development. 
 It was made, for me, and me alone, and was not user friendly. Its purpose and scope was limited.
 
 It is currently maintained on gitlab, and will not be merged downstream, here.
